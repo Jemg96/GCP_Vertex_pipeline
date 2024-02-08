@@ -28,10 +28,18 @@ steps:
     args:
       - '-c'
       - |
+        echo "Waiting for the service URL to be ready..." &&
+        sleep 10 &&  # Ensures the Cloud Run service is ready
+        echo "Fetching service URL for $_CLOUD_RUN_SERVICE in region $_REGION" &&
         _SERVICE_URL=$(gcloud run services describe $_CLOUD_RUN_SERVICE --region=$_REGION --platform=managed --format='value(status.url)') &&
-        echo "Service URL fetched: $_SERVICE_URL" &&
-        echo "Executing Cloud Run service at $_SERVICE_URL/$_PIPELINE_TYPE" &&
-        curl "$_SERVICE_URL/$_PIPELINE_TYPE"
+        echo "Service URL fetched: ${_SERVICE_URL}" &&
+        if [ -z "${_SERVICE_URL}" ]; then
+          echo "Failed to fetch service URL. Exiting." &&
+          exit 1
+        else
+          echo "Executing Cloud Run service at ${_SERVICE_URL}/$_PIPELINE_TYPE" &&
+          curl "${_SERVICE_URL}/$_PIPELINE_TYPE"
+        fi
 
 substitutions:
   _PROJECT_ID: 'astral-reef-391421'
