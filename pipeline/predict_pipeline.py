@@ -403,7 +403,14 @@ def run_pipeline(credential_path   : str = CREDENTIAL_PATH,
                                             credentials      = credentials,
                                             parameter_values = pipeline_parameters)
     
-    start_pipeline.submit(service_account="pe-fcor-ec-coea-cta-work-test@pe-fcor-ec-coea-explore-dev.iam.gserviceaccount.com")
+    # Open the file for reading
+    with open(credential_path, 'r') as file:
+        credentials_json = json.load(file)
+
+    # Access to service_account
+    service_acc = credentials_json.get('client_email')
+
+    start_pipeline.submit(service_account=service_acc)
     #start_pipeline.submit()
     
     return '-- OK RUN --'

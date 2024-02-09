@@ -253,7 +253,7 @@ def upload_to_model_registry(project                     : str,
     
     #=== Get the correct artifact_uri for the model ===#
     artifact_uri = input_model.path+'/'
-    print('El artifact uri es: '+str(artifact_uri))
+    print('El artifact uri es  : '+str(artifact_uri))
     
     #=== Generate a timestamp ===#
     from datetime import datetime
